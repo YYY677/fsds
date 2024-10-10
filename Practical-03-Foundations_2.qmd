@@ -1,0 +1,499 @@
+---
+title: 'Practical 3: Foundations (Part 2)'
+subtitle: 'Getting to grips with Dictionaries, LOLs and DOLs'
+jupyter:
+  jupytext:
+    text_representation:
+      extension: .qmd
+      format_name: quarto
+      format_version: '1.0'
+      jupytext_version: 1.16.4
+  kernelspec:
+    display_name: Python (base)
+    language: python
+    name: base
+filters:
+  - qna
+  - quarto
+---
+
+```{python}
+cities = ["Bristol", "London", "Manchester", "Edinburgh", "Belfast", "York"]
+```
+
+### List Arithmetic
+
+Replace the `??` so that it prints `Belfast`.
+
+:::: {.qna}
+
+#### Question
+
+```python
+print(cities[?? + 2])
+```
+
+#### Answer
+
+```{python}
+print(cities[2 + 2])
+```
+
+::::
+
+### Negative List Arithmetic 
+
+Use a **negative** index to print `Belfast`:
+
+:::: {.qna}
+
+#### Question
+
+```python
+print(cities[??])
+```
+
+#### Answer
+
+```{python}
+print(cities[-2])
+```
+
+::::
+
+### Finding a Position in a List
+
+Replace the `??` so that it prints the _index_ for Manchester in the list.
+
+:::: {.qna}
+
+#### Question
+
+```python
+print("The position of Manchester in the list is: " + str( ?? ))
+```
+
+#### Answer
+
+```{python}
+print("The position of Manchester in the list is: " + str( cities.index('Manchester')))
+```
+
+::::
+
+## Looking Across Lists
+
+::: {.callout-note}
+
+#### Connections
+
+This section draws on the [LOLs](https://jreades.github.io/fsds/sessions/week3.html#lectures) lecture and you will also find Code Camp's [Loops](https://jreades.github.io/code-camp/lessons/Loops.html) session useful here.
+
+:::
+    
+::: {.callout-warning collapse="true"}
+
+#### Difficulty: Medium.
+
+:::
+
+Notice that the list of `temperatures` below is the same length as the list of `cities`, that's because these are (roughly) the average temperatures for each city.
+
+```{python}
+cities = ["Bristol", "London", "Manchester", "Edinburgh", "Belfast", "York"]
+temperatures = [15.6, 16.5, 13.4, 14.0, 15.2, 14.8]
+```
+
+### Lateral Thinking
+
+Given what you know about `cities` and `temperatures`, how do you print: 
+
+```{python}
+#| echo: false
+#| output: asis
+city="Manchester"
+print(f'> "The average temperature in {city} is {temperatures[cities.index(city)]} degrees"')
+```
+
+But you have to do this _without_ doing any of the following:
+
+1. Using a list index directly (*i.e.* `cities[2]` and `temperatures[2]`) or 
+2. Hard-coding the name of the city? 
+
+To put it another way, **neither** of these solutions is the answer:
+
+```python
+print("The average temperature in Manchester is " + str(temperatures[2]) + " degrees.")
+# ...OR...
+city=2
+print("The average temperature in " + cities[city] + " is " + str(temperatures[city]) + " degrees.")
+```
+
+::: {.callout-tip}
+
+You will need to combine some of the ideas above and also think about the fact that the list index is that we need is the same in both lists... Also, remember that you'll need to wrap a `str(...)` around your temperature to make it into a string.
+
+:::
+
+:::: {.qna}
+
+#### Question
+
+```python
+city="Manchester" # Use this to get the solution...
+
+# This way is perfectly fine
+print("The average temperature in " + ?? + " is " + str(??))
+
+# This way is more Python 3 and a bit easier to read
+print(f"The average temperature in {??} is {??}")
+```
+
+#### Answer
+
+```{python}
+city="Manchester" # Use this to get the solution...
+
+# This way is perfectly fine
+print("The average temperature in " + city + " is " + str(temperatures[cities.index(city)]))
+
+# This way is more Python 3 and a bit easier to read
+print(f"The average temperature in {city} is {temperatures[cities.index(city)]}")
+```
+
+::::
+
+### Double-Checking Your Solution
+
+You'll know that you got the 'right' answer to the question above if you can copy+paste your code and change only **one** thing in order to print out: "The average temperature in Belfast is 15.2 degrees"
+
+:::: {.qna}
+
+#### Question
+
+```python
+city="Belfast"
+print(??)
+```
+
+#### Answer
+
+```{python}
+city="Belfast"
+print(f"The average temperature in {city} is {temperatures[cities.index(city)]}")
+```
+
+::::
+
+### Loops 
+
+Now use a `for` loop over the cities to print out the average temperature in each city:
+
+:::: {.qna}
+
+#### Question
+
+```python
+for c in cities:
+    ??
+```
+
+The output should be:
+
+```{python}
+#| echo: false
+for c in cities:
+    print(f"The average temperature in {c} is {temperatures[cities.index(c)]}")
+```
+
+#### Answer
+
+```{python}
+for c in cities:
+    print(f"The average temperature in {c} is {temperatures[cities.index(c)]}")
+```
+
+::::
+
+# Dictionaries
+
+::: {.callout-note}
+
+#### Connections
+
+This section draws on the [Dictionaries](https://jreades.github.io/fsds/sessions/week3.html#lectures) lecture and Code Camp [Dictonaries](https://jreades.github.io/code-camp/lessons/Dicts.html) session.
+
+:::
+
+::: {.callout-tip collapse="true"}
+
+#### Difficulty: Low.
+
+:::
+
+Remember that dictionaries (a.k.a. dicts) are like lists in that they are [data structures](https://docs.python.org/2/tutorial/datastructures.html) containing multiple elements. A key difference between [dictionaries](https://docs.python.org/2/tutorial/datastructures.html#dictionaries) and [lists](https://docs.python.org/2/tutorial/introduction.html#lists) is that while elements in lists are ordered, dicts (in most programming languages, though not Python) are unordered. This means that whereas for lists we use integers as indexes to access elements, in dictonaries we use 'keys' (which can multiple different types; strings, integers, etc.). Consequently, an important concept for dicts is that of key-value pairs. 
+
+## Creating an Atlas
+
+The code below creates an Atlas using a dictionary. The dictionary `key` is a city name, and the `value` is the latitude, longitude, and main airport code.
+
+```{python}
+#| echo: true
+cities = {
+    'San Francisco': [37.77, -122.43, 'SFO'],
+    'London': [51.51, -0.08, 'LDN'],
+    'Paris': [48.86,2.29, 'PAR'],
+    'Beijing': [39.92,116.40 ,'BEI'],
+}
+```
+
+### Adding to a Dict 
+
+Add a record to the dictionary for Chennai ([data here](https://en.wikipedia.org/wiki/Chennai))
+
+:::: {.qna}
+
+#### Question
+
+```python
+??
+```
+
+#### Answer
+
+```{python}
+cities['Chennai'] = [13.08, 80.28, 'MAA']
+```
+
+::::
+
+### Accessing a Dict 
+
+In *one* line of code, print out the airport code for Chennai (`MAA`):
+
+:::: {.qna}
+
+#### Question
+
+```python
+??
+```
+
+#### Answer
+
+```{python}
+#| echo: true
+print(f"The airport code for Chennai is {cities['Chennai'][2]}")
+```
+
+::::
+
+## Dealing With Errors
+
+Check you understand the difference between the following two blocks of code by running them.
+
+```{python}
+try:
+    print(cities['Berlin'])
+except KeyError as e:
+    print("Error found")
+    print(e)
+```
+
+```{python}
+try:
+    print(cities.get('Berlin','Not Found'))
+except KeyError as e:
+    print("Error found")
+    print(e)
+```
+
+Notice that trying to access a non-existent element of a dict triggers a `KeyError`, while asking the dict to `get` the _same element_ does not, it simply returns `None`. Can you think why, depending on the situtation, _either_ of these might be the 'correct' answer?
+
+## Thinking Data
+
+This section makes use of both the [Dictionaries](https://jreades.github.io/fsds/sessions/week3.html#lectures) lecture and the [DOLs to Data](https://jreades.github.io/fsds/sessions/week3.html#lectures) lecture.
+
+::: {.callout-tip}
+
+In this section you'll need to look up (i.e. Google) and make use of a few new functions that apply to dictionaries: `<dictionary>.items()`, `<dictionary>.keys()`. *Remember*: if in doubt, add `print(...)` statements to see what is going on!
+
+:::
+
+### Iterating over a Dict 
+
+Adapting the code below, print out the city name and airport code for every city in our Atlas.
+
+:::: {.qna}
+
+#### Question
+
+```python
+for c in cities.keys():
+    print(??)
+```
+
+The output should look something like this:
+```
+San Francisco -> SFO
+London -> LDN
+Paris -> PAR
+Beijing -> BEI
+Chennai -> MAA
+```
+
+#### Answer
+
+```{python}
+for c in cities.keys():
+    print(f"{c} -> {cities[c][2]}")
+```
+
+::::
+
+### More Complex Dicts 
+
+How would your code need to change to produce the _same output_ from this data structure:
+
+```{python}
+#| echo: true
+cities = {
+    'San Francisco': {
+        'lat': 37.77, 
+        'lon': -122.43,
+        'airport': 'SFO'},
+    'London': {
+        'lat': 51.51, 
+        'lon': -0.08, 
+        'airport': 'LDN'},
+    'Paris': {
+        'lat': 48.86,
+        'lon': 2.29, 
+        'airport': 'PAR'},
+    'Beijing': {
+        'lat': 39.92,
+        'lon': 116.40,
+        'airport': 'BEI'},
+    'Chennai': { 
+        'lat': 13.08, 
+        'lon': 80.28, 
+        'airport': 'MAA'}
+}
+```
+
+:::: {.qna}
+
+#### Question
+
+```python
+for c in cities.keys():
+    print(??)
+```
+
+#### Answer
+
+```{python}
+for c in cities.keys():
+    print(f"{c} -> {cities[c]['airport']}")
+```
+
+::::
+
+### More Dictionary Action! 
+
+And how would it need to change to print out the name and latitude of every city?
+
+:::: {.qna}
+
+#### Question
+
+```python
+for c in cities.keys():
+    print(??)
+```
+
+The output should be something like this:
+
+```{python}
+#| echo: false
+for c in cities.keys():
+    print(f"{c} is at latitude {cities[c]['lat']}")
+```
+
+#### Answer
+
+```{python}
+#| echo: true
+for c in cities.keys():
+    print(f"{c} is at latitude {cities[c]['lat']}")
+```
+
+::::
+
+### And Another Way to Use a Dict 
+
+Now produce the _same output_ using this new data structure:
+
+```{python}
+#| echo: true
+cities_alt = [
+    {'name':     'San Francisco',
+     'position': [37.77, -122.43],
+     'airport':  'SFO'},
+    {'name':     'London',
+     'position': [51.51, -0.08],
+     'airport':  'LDN'},
+    {'name':     'Paris',
+     'position': [48.86, 2.29],
+     'airport':  'PAR'},
+    {'name':     'Beijing',
+     'position': [39.92, 116.40],
+     'airport':  'BEI'},
+    {'name':     'Chennai', 
+     'position': [13.08, 80.28],
+      'airport': 'MAA'}
+]
+```
+
+:::: {.panel-tabset}
+
+#### Question
+
+```python
+for c in cities_alt:
+    print(??)
+```
+
+The output should be something like this:
+
+```
+San Francisco is at latitude 37.77
+London is at latitude 51.51
+Paris is at latitude 48.86
+Beijing is at latitude 39.92
+Chennai is at latitude 13.08
+```
+
+#### Answer
+
+```{python}
+#| echo: true
+for c in cities_alt:
+    print(f"{c['name']} is at latitude {c['position'][0]}")
+```
+
+::::
+
+### Think Data! 
+
+What are some of the main differences that you can think of between `cities` and `cities_alt` _as_ data? There is no right answer.
+
+::: {.callout-tip}
+
+I just want you to think about these *as data*! If you were trying to use `cities` and `cities_alt` as data what differences would you find when accessing one or more 'records'?
+
+:::
+
+- Point 1 here.
+- Point 2 here.
+- Point 3 here.
